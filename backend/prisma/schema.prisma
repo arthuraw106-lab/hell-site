@@ -1,0 +1,599 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  TRANSLATOR
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum MangaStatus {
+  ONGOING
+  COMPLETED
+  HIATUS
+  UPCOMING
+}
+
+enum TicketStatus {
+  OPEN
+  ANSWERED
+  CLOSED
+}
+
+enum TeamRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum NotificationType {
+  SYSTEM
+  COMMENT
+  TICKET
+  TEAM
+  MANGA
+  CHAT
+}
+
+enum UploadKind {
+  IMAGE
+  AUDIO
+  VIDEO
+  PDF
+  ZIP
+  OTHER
+}
+
+enum ChatRoomType {
+  PRIVATE
+  GROUP
+}
+
+enum MessageType {
+  TEXT
+  IMAGE
+  AUDIO
+  VIDEO
+  FILE
+  SYSTEM
+}
+
+model User {
+  id               String           @id @default(cuid())
+  phone            String?          @unique
+  email            String?          @unique
+  googleId         String?          @unique
+  username         String           @unique
+  displayName      String?
+  avatar           String?
+  bio              String?
+  role             Role             @default(USER)
+  isBanned         Boolean          @default(false)
+  refreshTokenHash String?
+  passwordHash      String?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  otpCodes         OtpCode[]
+  bookmarks        Bookmark[]
+  likes            Like[]
+  readingHistory   ReadingHistory[]
+  comments         Comment[]
+  commentVotes     CommentVote[]
+  commentReactions CommentReaction[]
+  storyLikes       StoryLike[]
+  storyViews       StoryView[]
+  stories          Story[]
+  teamRequests     TeamRequest[]
+  votes            Vote[]
+  tickets          Ticket[]
+  ticketMessages   TicketMessage[]
+  uploads          Upload[]
+  messages         Message[]
+  chatMembers      ChatMember[]
+  notifications    Notification[]
+
+  @@index([role])
+  @@index([createdAt])
+  teamProfile TeamMemberProfile?
+}
+
+model OtpCode {
+  id        String   @id @default(cuid())
+  phone     String
+  codeHash  String
+  expiresAt DateTime
+  consumed  Boolean  @default(false)
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@index([phone])
+  @@index([expiresAt])
+}
+
+model Manga {
+  id              String           @id @default(cuid())
+  slug            String           @unique
+  title           String
+  altTitle        String?
+  description     String
+  cover           String?
+  banner          String?
+  status          MangaStatus      @default(ONGOING)
+  published       Boolean          @default(true)
+  seoTitle        String?
+  seoDescription  String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  genres          Genre[]          @relation("GenreManga")
+  chapters        Chapter[]
+  bookmarks       Bookmark[]
+  likes           Like[]
+  readingHistory  ReadingHistory[]
+  comments        Comment[]
+  tags            Tag[]            @relation("MangaTags")
+
+  @@index([status])
+  @@index([published])
+  @@index([createdAt])
+}
+
+model Genre {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  slug      String   @unique
+  mangas    Manga[]  @relation("GenreManga")
+  createdAt DateTime @default(now())
+}
+
+model Tag {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  slug      String   @unique
+  mangas    Manga[]  @relation("MangaTags")
+  createdAt DateTime @default(now())
+}
+
+model Chapter {
+  id          String           @id @default(cuid())
+  mangaId     String
+  manga       Manga            @relation(fields: [mangaId], references: [id], onDelete: Cascade)
+  number      Float
+  title       String
+  slug        String?
+  pages       String[]
+  pdfUrl      String?
+  zipUrl      String?
+  summary     String?
+  views       Int              @default(0)
+  published   Boolean          @default(true)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  likes       Like[]
+  comments    Comment[]
+  history     ReadingHistory[]
+
+  @@unique([mangaId, number])
+  @@index([published])
+  @@index([createdAt])
+}
+
+model Bookmark {
+  id        String   @id @default(cuid())
+  userId    String
+  mangaId   String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  manga     Manga    @relation(fields: [mangaId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, mangaId])
+  @@index([createdAt])
+}
+
+model Like {
+  id        String   @id @default(cuid())
+  userId    String
+  mangaId   String?
+  chapterId String?
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  manga     Manga?   @relation(fields: [mangaId], references: [id], onDelete: Cascade)
+  chapter   Chapter? @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, mangaId])
+  @@unique([userId, chapterId])
+  @@index([createdAt])
+}
+
+model ReadingHistory {
+  id        String   @id @default(cuid())
+  userId    String
+  mangaId   String
+  chapterId String
+  progress  Int      @default(0)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  manga     Manga    @relation(fields: [mangaId], references: [id], onDelete: Cascade)
+  chapter   Chapter  @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, mangaId])
+  @@index([updatedAt])
+}
+
+model Comment {
+  id          String            @id @default(cuid())
+  userId      String
+  mangaId     String
+  chapterId   String
+  parentId    String?
+  body        String
+  spoiler     Boolean           @default(false)
+  reports     Int               @default(0)
+  isHidden    Boolean           @default(false)
+  user        User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  manga       Manga             @relation(fields: [mangaId], references: [id], onDelete: Cascade)
+  chapter     Chapter           @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  parent      Comment?          @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies     Comment[]         @relation("CommentReplies")
+  votes       CommentVote[]
+  reactions   CommentReaction[]
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  @@index([chapterId])
+  @@index([parentId])
+  @@index([createdAt])
+}
+
+model CommentVote {
+  id        String   @id @default(cuid())
+  userId    String
+  commentId String
+  value     Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  comment   Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, commentId])
+}
+
+model CommentReaction {
+  id        String   @id @default(cuid())
+  userId    String
+  commentId String
+  emoji     String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  comment   Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, commentId, emoji])
+}
+
+model Story {
+  id        String      @id @default(cuid())
+  userId    String
+  text      String?
+  mediaUrl  String?
+  likes     StoryLike[]
+  views     StoryView[]
+  expiresAt DateTime
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime    @default(now())
+
+  @@index([expiresAt])
+  @@index([createdAt])
+}
+
+model StoryLike {
+  id        String   @id @default(cuid())
+  userId    String
+  storyId   String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  story     Story    @relation(fields: [storyId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, storyId])
+}
+
+model TeamRequest {
+  id         String            @id @default(cuid())
+  userId        String
+  requestedRole String?
+  skills        String
+  experience    String
+  sampleUrl     String?
+  status        TeamRequestStatus @default(PENDING)
+  note       String?
+  user       User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
+
+  @@index([status])
+  testFileUrl String?
+  testReviewedAt DateTime?
+  profileSubmittedAt DateTime?
+  finalReviewedAt DateTime?
+  adminNote String?
+}
+
+model PollProject {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  cover       String?
+  active      Boolean  @default(true)
+  votes       Vote[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([active])
+}
+
+model Vote {
+  id        String      @id @default(cuid())
+  userId    String
+  projectId String
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project   PollProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdAt DateTime    @default(now())
+
+  @@unique([userId, projectId])
+}
+
+model Ticket {
+  id        String          @id @default(cuid())
+  userId    String
+  category  String
+  subject   String
+  status    TicketStatus    @default(OPEN)
+  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages  TicketMessage[]
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+}
+
+model TicketMessage {
+  id        String   @id @default(cuid())
+  ticketId  String
+  userId    String
+  body      String
+  isAdmin   Boolean  @default(false)
+  ticket    Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@index([ticketId])
+}
+
+model ChatRoom {
+  id          String       @id @default(cuid())
+  type        ChatRoomType @default(GROUP)
+  slug        String?      @unique
+  name        String?
+  description String?
+  isPrivate   Boolean      @default(false)
+  avatar      String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  members     ChatMember[]
+  messages    Message[]
+}
+
+model ChatMember {
+  id        String   @id @default(cuid())
+  roomId    String
+  userId    String
+  room      ChatRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([roomId, userId])
+  @@index([userId])
+}
+
+model Message {
+  id        String      @id @default(cuid())
+  roomId    String
+  userId    String
+  type      MessageType @default(TEXT)
+  body      String?
+  mediaUrl  String?
+  room      ChatRoom    @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime    @default(now())
+
+  @@index([roomId])
+  @@index([createdAt])
+}
+
+model Upload {
+  id        String     @id @default(cuid())
+  userId    String
+  key       String     @unique
+  url       String
+  mimeType  String
+  size      Int
+  kind      UploadKind @default(OTHER)
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime   @default(now())
+
+  @@index([kind])
+  @@index([createdAt])
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  type      NotificationType @default(SYSTEM)
+  title     String
+  body      String?
+  read      Boolean          @default(false)
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime         @default(now())
+
+  @@index([read])
+  @@index([createdAt])
+}
+
+model SiteSetting {
+  key       String   @id
+  value     Json
+  updatedAt DateTime @updatedAt
+}
+
+
+model StoryView {
+  id        String   @id @default(cuid())
+  userId    String
+  storyId   String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  story     Story    @relation(fields: [storyId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, storyId])
+  @@index([storyId])
+  @@index([createdAt])
+}
+
+
+enum TeamRole {
+  TRANSLATOR
+  CLEANER
+  TYPESETTER
+  EDITOR
+  UPLOADER
+}
+
+
+enum TeamJoinStatus {
+  TEST_PENDING
+  TEST_APPROVED
+  TEST_REJECTED
+  PROFILE_PENDING
+  FULL_APPROVED
+  REJECTED
+}
+
+
+enum TeamTaskStatus {
+  ASSIGNED
+  SUBMITTED
+  APPROVED
+  REJECTED
+  CANCELLED
+}
+
+
+enum WalletTransactionType {
+  CREDIT
+  DEBIT
+  PENALTY
+  BONUS
+  PAYMENT
+}
+
+
+model TeamMemberProfile {
+  id String @id @default(cuid())
+
+  userId String @unique
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  teamRole TeamRole
+  status TeamJoinStatus @default(TEST_PENDING)
+
+  phone String?
+  telegramId String?
+  cardNumber String?
+
+  walletBalance Int @default(0)
+
+  approvedTestAt DateTime?
+  fullyApprovedAt DateTime?
+
+  tasks TeamTask[]
+  walletTransactions TeamWalletTransaction[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+model TeamTestFile {
+  id String @id @default(cuid())
+
+  role TeamRole @unique
+  title String
+  description String?
+  fileUrl String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+model TeamTask {
+  id String @id @default(cuid())
+
+  assigneeId String
+  assignee TeamMemberProfile @relation(fields: [assigneeId], references: [id], onDelete: Cascade)
+
+  mangaId String?
+  chapterId String?
+
+  role TeamRole
+
+  title String
+  description String?
+
+  englishFileUrl String?
+  translationFileUrl String?
+  cleanedFileUrl String?
+  extraFileUrl String?
+
+  price Int
+  deadlineAt DateTime?
+
+  status TeamTaskStatus @default(ASSIGNED)
+
+  submittedFileUrl String?
+  submittedNote String?
+  submittedAt DateTime?
+
+  approvedAt DateTime?
+  rejectedAt DateTime?
+  adminNote String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+model TeamWalletTransaction {
+  id String @id @default(cuid())
+
+  memberId String
+  member TeamMemberProfile @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  type WalletTransactionType
+  amount Int
+  reason String?
+
+  taskId String?
+
+  createdAt DateTime @default(now())
+}
