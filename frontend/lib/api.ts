@@ -1,6 +1,17 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 
-export const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+// For server-side rendering (inside Docker container), use internal "backend" hostname
+// For client-side (browser), use same origin as the page to avoid CORS, but proxy through /api
+function resolveApiUrl(): string {
+  if (typeof window === 'undefined') {
+    // Server-side: internal Docker network
+    return process.env.BACKEND_INTERNAL_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+  }
+  // Client-side: use NEXT_PUBLIC_API_URL, fallback to building from window.location
+  return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+}
+
+export const API_URL = resolveApiUrl();
 
 export type ApiResponse<T> = {
   success: boolean;
