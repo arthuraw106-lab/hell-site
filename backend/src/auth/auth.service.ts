@@ -235,7 +235,6 @@ export class AuthService {
     return {
       user: {
         id: user.id,
-        phone: user.phone,
         email: user.email,
         username: user.username,
         displayName: user.displayName,

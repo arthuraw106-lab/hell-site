@@ -1,17 +1,41 @@
-node_modules
-.next
-dist
-build
-coverage
+# Dependencies
+node_modules/
+
+# Build outputs
+.next/
+dist/
+build/
+coverage/
+
+# Env files (keep .env.example as template)
 .env
 .env.local
 .env.production
+
+# Docker
+docker-compose.override.yml
+
+# Logs
 *.log
+
+# OS
 .DS_Store
 Thumbs.db
-backend/generated
-backend/prisma/migrations/dev
-frontend/.next
-uploads
-.tmp
-.cache
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Backend
+backend/generated/
+backend/prisma/migrations/dev/
+
+# Uploads / Media
+uploads/*
+!uploads/.gitkeep
+
+# Cache
+.tmp/
+.cache/

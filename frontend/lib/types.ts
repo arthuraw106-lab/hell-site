@@ -39,6 +39,8 @@ export type Chapter = {
   manga?: Pick<Manga, 'id' | 'slug' | 'title' | 'cover'>;
 };
 
+export type MangaStatus = 'ONGOING' | 'COMPLETED' | 'HIATUS' | 'UPCOMING';
+
 export type Manga = {
   id: string;
   slug: string;
@@ -47,7 +49,7 @@ export type Manga = {
   description: string;
   cover?: string | null;
   banner?: string | null;
-  status: 'ONGOING' | 'COMPLETED' | 'HIATUS' | 'UPCOMING';
+  status: MangaStatus;
   published: boolean;
   seoTitle?: string | null;
   seoDescription?: string | null;
@@ -93,5 +95,134 @@ export type Story = {
   createdAt: string;
   user: Pick<User, 'id' | 'username' | 'displayName' | 'avatar'>;
   likes: { id: string; userId: string; createdAt?: string }[];
-  views?: { id: string; userId: string; createdAt?: string }[];
+  views: { id: string; userId: string; createdAt?: string }[];
+  _count?: {
+    likes: number;
+    views: number;
+  };
+};
+
+export type TeamRole = 'TRANSLATOR' | 'CLEANER' | 'TYPESETTER' | 'EDITOR' | 'UPLOADER';
+export type TeamJoinStatus =
+  | 'TEST_PENDING'
+  | 'TEST_APPROVED'
+  | 'TEST_REJECTED'
+  | 'PROFILE_PENDING'
+  | 'FULL_APPROVED'
+  | 'REJECTED';
+export type TeamTaskStatus = 'ASSIGNED' | 'SUBMITTED' | 'APPROVED' | 'REJECTED' | 'CANCELLED';
+
+export type TeamMemberProfile = {
+  id: string;
+  userId: string;
+  teamRole: TeamRole;
+  status: TeamJoinStatus;
+  phone?: string | null;
+  telegramId?: string | null;
+  cardNumber?: string | null;
+  walletBalance: number;
+  user?: Pick<User, 'id' | 'username' | 'displayName' | 'avatar'>;
+  createdAt: string;
+};
+
+export type TeamTask = {
+  id: string;
+  assigneeId: string;
+  mangaId?: string | null;
+  chapterId?: string | null;
+  role: TeamRole;
+  title: string;
+  description?: string | null;
+  price: number;
+  deadlineAt?: string | null;
+  status: TeamTaskStatus;
+  submittedFileUrl?: string | null;
+  submittedNote?: string | null;
+  submittedAt?: string | null;
+  createdAt: string;
+};
+
+export type TeamWalletTransaction = {
+  id: string;
+  memberId: string;
+  type: 'CREDIT' | 'DEBIT' | 'PENALTY' | 'BONUS' | 'PAYMENT';
+  amount: number;
+  reason?: string | null;
+  taskId?: string | null;
+  createdAt: string;
+};
+
+export type PollProject = {
+  id: string;
+  title: string;
+  description?: string | null;
+  cover?: string | null;
+  active: boolean;
+  _count?: {
+    votes: number;
+  };
+  createdAt: string;
+};
+
+export type Ticket = {
+  id: string;
+  userId: string;
+  category: string;
+  subject: string;
+  status: 'OPEN' | 'ANSWERED' | 'CLOSED';
+  user?: Pick<User, 'id' | 'username' | 'displayName' | 'avatar'>;
+  messages?: TicketMessage[];
+  createdAt: string;
+};
+
+export type TicketMessage = {
+  id: string;
+  ticketId: string;
+  userId: string;
+  body: string;
+  isAdmin: boolean;
+  user?: Pick<User, 'id' | 'username' | 'displayName' | 'avatar'>;
+  createdAt: string;
+};
+
+export type ChatRoom = {
+  id: string;
+  type: 'PRIVATE' | 'GROUP';
+  slug?: string | null;
+  name?: string | null;
+  description?: string | null;
+  isPrivate: boolean;
+  avatar?: string | null;
+};
+
+export type ChatMessage = {
+  id: string;
+  roomId;
+  userId: string;
+  type: 'TEXT' | 'IMAGE' | 'AUDIO' | 'VIDEO' | 'FILE' | 'SYSTEM';
+  body?: string | null;
+  mediaUrl?: string | null;
+  user?: Pick<User, 'id' | 'username' | 'displayName' | 'avatar'>;
+  createdAt: string;
+};
+
+export type Upload = {
+  id: string;
+  userId: string;
+  key: string;
+  url: string;
+  mimeType: string;
+  size: number;
+  kind: 'IMAGE' | 'AUDIO' | 'VIDEO' | 'PDF' | 'ZIP' | 'OTHER';
+  createdAt: string;
+};
+
+export type Notification = {
+  id: string;
+  userId: string;
+  type: 'SYSTEM' | 'COMMENT' | 'TICKET' | 'TEAM' | 'MANGA' | 'CHAT';
+  title: string;
+  body?: string | null;
+  read: boolean;
+  createdAt: string;
 };

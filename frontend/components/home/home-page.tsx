@@ -23,20 +23,10 @@ import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { ProButton } from '@/components/ui/pro-button';
 import { apiGet, apiPost } from '@/lib/api';
-import type { Manga, Paginated } from '@/lib/types';
+import type { Chapter, Manga, Paginated, PollProject } from '@/lib/types';
 import { getImageFallback } from '@/lib/utils';
 import { HomeMangaCard } from './home-manga-card';
 import { StoryStrip } from './story-strip';
-
-type PollProject = {
-  id: string;
-  title: string;
-  description: string;
-  cover?: string | null;
-  _count: {
-    votes: number;
-  };
-};
 
 export function HomePage() {
   const { data, isLoading } = useQuery({
@@ -110,11 +100,11 @@ export function HomePage() {
                 </div>
 
                 <div className="mt-10 grid max-w-2xl gap-3 sm:grid-cols-3">
-                  {[
-                    ['مانهوا', `${data?.meta?.total || mangas.length}+`, Flame],
-                    ['چپتر جدید', `${latestChapters.length}+`, Zap],
-                    ['سیستم زنده', 'Real-time', MessageCircle],
-                  ].map(([label, value, Icon]: any) => (
+                  {([
+                                      ['مانهوا', `${data?.meta?.total ?? mangas.length}+`, Flame] as const,
+                                      ['چپتر جدید', `${latestChapters.length}+`, Zap] as const,
+                                      ['سیستم زنده', 'Real-time', MessageCircle] as const,
+                                    ] as const).map(([label, value, Icon]) => (
                     <div key={label} className="neo-card rounded-3xl p-4">
                       <Icon className="mb-3 text-hell-gold" size={22} />
                       <div className="text-2xl font-black">{value}</div>
@@ -318,11 +308,11 @@ export function HomePage() {
 
         <section className="mx-auto max-w-7xl px-5 pb-20">
           <div className="grid gap-5 md:grid-cols-3">
-            {[
-              ['امنیت و نقش‌ها', 'JWT، Refresh Token، RBAC و محافظت APIها', ShieldCheck],
-              ['چت و جامعه', 'چت زنده، استوری و بات رجیس برای تعامل بیشتر', MessageCircle],
-              ['جستجو و رشد', 'ساختار آماده برای SEO، فیلتر و رشد محتوا', Search],
-            ].map(([title, text, Icon]: any, index) => (
+            {([
+                        ['امنیت و نقش\u200cها', 'JWT، Refresh Token، RBAC و محافظت APIها', ShieldCheck] as const,
+                        ['چت و جامعه', 'چت زنده، استوری و بات رجیس برای تعامل بیشتر', MessageCircle] as const,
+                        ['جستجو و رشد', 'ساختار آماده برای SEO، فیلتر و رشد محتوا', Search] as const,
+                      ] as const).map(([title, text, Icon], index) => (
               <Reveal key={title} delay={index * 0.08}>
                 <div className="neo-card rounded-[2rem] p-6">
                   <Icon className="mb-5 text-hell-gold" size={30} />
