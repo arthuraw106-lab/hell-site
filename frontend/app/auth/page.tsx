@@ -1,9 +1,9 @@
 import { AuthPage } from '@/components/auth/auth-page';
 
 export const metadata = {
-  title: 'ورود و ثبت‌نام',
+ title: 'ورود و ثبت‌نام',
 };
 
 export default function Page() {
-  return <AuthPage />;
+ return <AuthPage />;
 }

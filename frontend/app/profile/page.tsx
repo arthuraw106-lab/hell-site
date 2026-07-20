@@ -1,9 +1,9 @@
 import { ProfilePage } from '@/components/profile/profile-page';
 
 export const metadata = {
-  title: 'پروفایل',
+ title: 'پروفایل',
 };
 
 export default function Page() {
-  return <ProfilePage />;
+ return <ProfilePage />;
 }

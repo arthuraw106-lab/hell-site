@@ -1,15 +1,15 @@
 import { ReaderPage } from '@/components/reader/reader-page';
 
 type PageProps = {
-  params: Promise<{ chapterId: string }>;
+ params: Promise<{ chapterId: string }>;
 };
 
 export const metadata = {
-  title: 'خواندن چپتر',
+ title: 'خواندن چپتر',
 };
 
 export default async function Page({ params }: PageProps) {
-  const { chapterId } = await params;
+ const { chapterId } = await params;
 
-  return <ReaderPage chapterId={chapterId} />;
+ return <ReaderPage chapterId={chapterId} />;
 }
