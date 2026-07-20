@@ -38,6 +38,7 @@ import { ChapterZipUpload } from '@/components/upload/chapter-zip-upload';
 import { UploadBox } from '@/components/upload/upload-box';
 import { FeaturedMangaAdminCard } from '@/components/admin/featured-manga-admin-card';
 import PollProjectsAdminCard from '@/components/admin/poll-projects-admin-card';
+import TeamAdminPanel from '@/components/admin/team-admin-panel';
 import { apiDelete, apiGet, apiPatch, apiPost } from '@/lib/api';
 import type { Manga, Paginated } from '@/lib/types';
 
@@ -269,7 +270,7 @@ export function AdminPage() {
  {tab === 'manga' ? <MangaAdminTab /> : null}
  {tab === 'users' ? <UsersAdminTab /> : null}
  {tab === 'comments' ? <CommentsAdminTab /> : null}
- {tab === 'team' ? <TeamAdminTab /> : null}
+ {tab === 'team' ? <TeamAdminPanel /> : null}
  {tab === 'tickets' ? <TicketsAdminTab /> : null}
  </main>
  </AppShell>
@@ -648,55 +649,6 @@ function CommentsAdminTab() {
  </div>
  <p className="rounded-2xl bg-white/[0.035] p-4 leading-7 text-white/65">{comment.body}</p>
  <Button className="mt-4" size="sm" variant="danger" onClick={() => mutation.mutate(comment.id)}>مخفی کردن</Button>
- </div>
- ))}
- </div>
- </Card>
- </Reveal>
- );
-}
-
-function TeamAdminTab() {
- const queryClient = useQueryClient();
- const [notes, setNotes] = useState<Record<string, string>>({});
-
- const { data = [], isLoading } = useQuery({
- queryKey: ['admin-team-requests-ticket-ui'],
- queryFn: () => apiGet<TeamRequest[]>('/admin/team-requests'),
- });
-
- const approveMutation = useMutation({
- mutationFn: ({ id, note }: { id: string; note?: string }) => apiPatch(`/admin/team-requests/${id}/approve`, { note }),
- onSuccess: () => queryClient.invalidateQueries({ queryKey: ['admin-team-requests-ticket-ui'] }),
- });
-
- const rejectMutation = useMutation({
- mutationFn: ({ id, note }: { id: string; note?: string }) => apiPatch(`/admin/team-requests/${id}/reject`, { note }),
- onSuccess: () => queryClient.invalidateQueries({ queryKey: ['admin-team-requests-ticket-ui'] }),
- });
-
- return (
- <Reveal>
- <Card className="card rounded-[2.5rem] p-6">
- <h2 className="text-3xl font-black">درخواست‌های تیم ترجمه</h2>
- <div className="mt-6 grid gap-3">
- {isLoading ? <div className="h-64 rounded-3xl skeleton" /> : data.map((request) => (
- <div key={request.id} className="rounded-3xl border border-white/10 bg-white/[0.04] p-5">
- <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-center">
- <div>
- <strong className="text-lg">{request.user.username}</strong>
- <p className="mt-1 text-sm text-white/45">نقش درخواستی: {request.requestedRole || 'نامشخص'} · وضعیت: {request.status}</p>
- </div>
- <div className="flex gap-2">
- <Button size="sm" onClick={() => approveMutation.mutate({ id: request.id, note: notes[request.id] })}>تایید</Button>
- <Button size="sm" variant="danger" onClick={() => rejectMutation.mutate({ id: request.id, note: notes[request.id] })}>رد</Button>
- </div>
- </div>
- <div className="mt-4 grid gap-3 md:grid-cols-2">
- <div className="rounded-2xl bg-white/[0.035] p-4"><div className="mb-2 text-sm font-bold text-white/45">مهارت‌ها</div><p className="text-sm leading-7 text-white/65">{request.skills}</p></div>
- <div className="rounded-2xl bg-white/[0.035] p-4"><div className="mb-2 text-sm font-bold text-white/45">تجربه</div><p className="text-sm leading-7 text-white/65">{request.experience}</p></div>
- </div>
- <Textarea value={notes[request.id] || ''} onChange={(event) => setNotes({ ...notes, [request.id]: event.target.value })} placeholder="پیام ادمین برای کاربر..." className="mt-4 min-h-24" />
  </div>
  ))}
  </div>

@@ -42,13 +42,18 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}):
   });
 
   const text = await res.text();
-  const data = text ? JSON.parse(text) : null;
+  const json = text ? JSON.parse(text) : null;
 
   if (!res.ok) {
-    throw new Error(data?.message || data?.error || 'خطای ارتباط با سرور');
+    throw new Error(json?.message || json?.error || 'خطای ارتباط با سرور');
   }
 
-  return data as T;
+  // Backend wraps successful responses as { success: true, data: ... }
+  if (json && json.success !== undefined) {
+    return json.data as T;
+  }
+
+  return json as T;
 }
 
 export function mediaUrl(url?: string | null): string {
