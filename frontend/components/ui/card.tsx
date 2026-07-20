@@ -2,18 +2,13 @@ import * as React from 'react';
 import { cn } from '@/lib/utils';
 
 export function Card({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return (
-    <div
-      className={cn('rounded-[1.7rem] border border-white/10 bg-white/[0.04] shadow-sm', className)}
-      {...props}
-    />
-  );
+  return <div className={cn('card p-4', className)} {...props} />;
 }
 
 export function CardHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn('p-5 pb-3', className)} {...props} />;
+  return <div className={cn('p-2 pb-1', className)} {...props} />;
 }
 
 export function CardContent({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn('p-5', className)} {...props} />;
+  return <div className={cn('p-2', className)} {...props} />;
 }

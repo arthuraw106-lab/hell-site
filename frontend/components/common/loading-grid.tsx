@@ -1,13 +1,9 @@
-export function LoadingGrid({ count = 8 }: { count?: number }) {
+export function LoadingGrid({ count = 6 }: { count?: number }) {
   return (
-    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-      {Array.from({ length: count }).map((_, index) => (
-        <div key={index} className="h-[420px] rounded-[2rem] skeleton" />
+    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+      {Array.from({ length: count }).map((_, i) => (
+        <div key={i} className="skeleton h-48 rounded-lg" />
       ))}
     </div>
   );
-}
-
-export function LoadingPanel() {
-  return <div className="h-80 rounded-[2.5rem] skeleton" />;
 }

@@ -12,188 +12,74 @@
 
 :root {
   --font-persian: 'VazirmatnLocal';
-  --background: 250 45% 2%;
-  --foreground: 0 0% 100%;
-  --border: 258 90% 75% / 0.14;
+  --bg: #0a0814;
+  --bg-card: #14102a;
+  --border: #2a2245;
+  --purple: #7c3aed;
+  --purple-light: #a78bfa;
+  --purple-dark: #4c1d95;
+  --text: #e5e0f5;
+  --text-dim: #8b7fa8;
 }
 
 html {
   direction: rtl;
-  scroll-behavior: smooth;
   font-family: var(--font-persian), Tahoma, Arial, sans-serif;
 }
 
 body {
   margin: 0;
   min-height: 100vh;
-  background:
-    radial-gradient(circle at 18% 0%, rgba(76, 29, 149, 0.36), transparent 32%),
-    radial-gradient(circle at 82% 12%, rgba(124, 58, 237, 0.24), transparent 34%),
-    radial-gradient(circle at 50% 100%, rgba(49, 46, 129, 0.20), transparent 34%),
-    #030308;
+  background: var(--bg);
+  background-image:
+    radial-gradient(ellipse at top, rgba(124, 58, 237, 0.15), transparent 60%);
   background-attachment: fixed;
-  color: white;
-  overflow-x: hidden;
-  font-family: var(--font-persian), Tahoma, Arial, sans-serif;
-  text-rendering: geometricPrecision;
+  color: var(--text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
+::selection { background: rgba(124, 58, 237, 0.5); color: white; }
+a { color: inherit; text-decoration: none; }
+button, input, textarea, select { font: inherit; }
+img, video { max-width: 100%; display: block; }
+option { background: #0b0b18; color: white; }
 
-::selection {
-  background: rgba(124, 58, 237, 0.78);
-  color: white;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-button,
-input,
-textarea,
-select {
-  font: inherit;
-}
-
-img,
-video {
-  max-width: 100%;
-  display: block;
-}
-
-option {
-  background: #0b0b18;
-  color: white;
-}
-
-/* Glass surfaces — kept backdrop-filter but only on elements that really need it */
-.glass {
-  background:
-    linear-gradient(135deg, rgba(124,58,237,.14), rgba(255,255,255,.035)),
-    rgba(8,8,18,.82);
-  border: 1px solid rgba(167,139,250,.14);
-  box-shadow: 0 24px 80px rgba(0,0,0,.45);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-}
-
-.glass-soft {
-  background: rgba(124,58,237,.055);
-  border: 1px solid rgba(167,139,250,.10);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
-
-/* Neo card: removed backdrop-filter blur (was the #1 cause of jank — replaced with solid-ish bg) */
-.neo-card {
-  position: relative;
-  overflow: hidden;
-  background:
-    linear-gradient(145deg, rgba(124,58,237,.10), rgba(255,255,255,.02)),
-    radial-gradient(circle at top right, rgba(139,92,246,.14), transparent 40%),
-    radial-gradient(circle at bottom left, rgba(76,29,149,.14), transparent 40%),
-    rgba(8,8,18,.86);
-  border: 1px solid rgba(167,139,250,.13);
-  box-shadow: 0 20px 60px rgba(0,0,0,.42);
-}
-
-.neo-card::before {
-  content: "";
-  position: absolute;
-  inset: -1px;
-  pointer-events: none;
-  background: linear-gradient(120deg, transparent, rgba(196,181,253,.14), transparent);
-  transform: translateX(120%);
-  transition: transform .8s ease;
-}
-
-.neo-card:hover::before {
-  transform: translateX(-120%);
-}
-
-.premium-border {
-  position: relative;
-}
-
-.premium-border::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1px;
-  pointer-events: none;
-  background: linear-gradient(135deg, rgba(196,181,253,.60), rgba(124,58,237,.46), rgba(76,29,149,.55));
-  -webkit-mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
+/* Card — no blur, no gradient, just solid */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
 }
 
 .text-gradient {
-  background: linear-gradient(90deg, #ffffff, #ddd6fe, #a78bfa, #7c3aed);
+  background: linear-gradient(90deg, #fff, #ddd6fe, #a78bfa);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
-.hero-grid {
-  background-image:
-    linear-gradient(rgba(167,139,250,.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(167,139,250,.045) 1px, transparent 1px);
-  background-size: 54px 54px;
-  mask-image: radial-gradient(circle at center, black, transparent 80%);
-}
-
-/* Noise overlay — only visible once, no animation */
-.noise {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 1;
-  opacity: .04;
-  background-image:
-    linear-gradient(rgba(167,139,250,.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(167,139,250,.04) 1px, transparent 1px);
-  background-size: 42px 42px;
-  mask-image: radial-gradient(circle at center, black, transparent 75%);
-}
-
 .skeleton {
-  background: linear-gradient(90deg, #0b0b18 25%, #1a1538 50%, #0b0b18 75%);
-  background-size: 200% 100%;
+  background: #1a1430;
   animation: shimmer 1.5s infinite;
 }
 
-.custom-scrollbar::-webkit-scrollbar {
-  height: 8px;
-  width: 8px;
+@keyframes shimmer {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
 }
 
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: rgba(167,139,250,.05);
-  border-radius: 99px;
-}
-
+.custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, rgba(139,92,246,.85), rgba(76,29,149,.85));
+  background: var(--border);
   border-radius: 99px;
 }
 
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
 .line-clamp-2 {
   display: -webkit-box;
@@ -209,133 +95,18 @@ option {
   overflow: hidden;
 }
 
-.floaty {
-  animation: floaty 6s ease-in-out infinite;
-}
-
-.pulse-glow {
-  animation: pulseGlow 3.2s ease-in-out infinite;
-}
-
-@keyframes floaty {
-  0%, 100% {
-    transform: translateY(0) rotate(0deg);
-  }
-  50% {
-    transform: translateY(-18px) rotate(2deg);
-  }
-}
-
-@keyframes floatyIconLeft {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-12px); }
-}
-
-@keyframes floatyIconRight {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(12px); }
-}
-
-.animate-floaty-icon-left {
-  animation: floatyIconLeft 4s ease-in-out infinite;
-}
-
-.animate-floaty-icon-right {
-  animation: floatyIconRight 4.5s ease-in-out infinite;
-}
-
-/* Reduced animation intensity for performance (was causing repaint storms with blur-3xl) */
-@keyframes floatBlobSlow {
-  0%, 100% { transform: translate(0, 0); }
-  50% { transform: translate(-20px, 15px); }
-}
-
-@keyframes floatBlobMedium {
-  0%, 100% { transform: translate(0, 0); }
-  50% { transform: translate(18px, -12px); }
-}
-
-@keyframes floatBlobSlower {
-  0%, 100% { transform: translate(-50%, 0); }
-  50% { transform: translate(-50%, -15px); }
-}
-
-.animate-float-slow {
-  animation: floatBlobSlow 12s ease-in-out infinite;
-}
-
-.animate-float-medium {
-  animation: floatBlobMedium 14s ease-in-out infinite;
-}
-
-.animate-float-slower {
-  animation: floatBlobSlower 16s ease-in-out infinite;
-}
-
-@keyframes reveal {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes cardReveal {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 .animate-reveal {
-  animation: reveal 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: fade-in 0.3s ease both;
 }
 
-.animate-card-reveal {
-  animation: cardReveal 0.45s ease both;
-}
-
-@keyframes pulseGlow {
-  0%, 100% {
-    box-shadow: 0 0 35px rgba(124,58,237,.25);
-  }
-  50% {
-    box-shadow: 0 0 60px rgba(124,58,237,.40);
-  }
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
-}
-
-/* Reduce backdrop-filter blur intensity on smaller screens / weaker GPUs */
-@media (max-width: 768px) {
-  .glass,
-  .glass-soft {
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-  }
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     animation-duration: .01ms !important;
-    animation-iteration-count: 1 !important;
-    scroll-behavior: auto !important;
     transition-duration: .01ms !important;
   }
 }

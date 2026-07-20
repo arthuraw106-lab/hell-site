@@ -6,23 +6,18 @@ type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   size?: 'sm' | 'md' | 'lg';
 };
 
-export function Button({
-  className,
-  variant = 'primary',
-  size = 'md',
-  ...props
-}: ButtonProps) {
+export function Button({ className, variant = 'primary', size = 'md', ...props }: ButtonProps) {
   return (
     <button
       className={cn(
-        'inline-flex items-center justify-center rounded-2xl font-bold transition disabled:pointer-events-none disabled:opacity-50',
-        variant === 'primary' && 'bg-hell-red text-white shadow-glow hover:bg-red-500',
-        variant === 'secondary' && 'border border-white/10 bg-white/10 text-white hover:bg-white/15',
-        variant === 'ghost' && 'text-white/75 hover:bg-white/10 hover:text-white',
+        'inline-flex items-center justify-center rounded-lg font-bold transition-colors disabled:opacity-50 disabled:pointer-events-none',
+        variant === 'primary' && 'bg-hell-violet text-white hover:bg-hell-violet2',
+        variant === 'secondary' && 'border border-hell-border bg-hell-card text-white hover:bg-hell-purple',
+        variant === 'ghost' && 'text-hell-muted hover:text-white',
         variant === 'danger' && 'bg-red-600 text-white hover:bg-red-500',
-        size === 'sm' && 'h-9 px-3 text-sm',
-        size === 'md' && 'h-11 px-5',
-        size === 'lg' && 'h-13 px-7 text-lg',
+        size === 'sm' && 'h-8 px-3 text-sm',
+        size === 'md' && 'h-10 px-4',
+        size === 'lg' && 'h-12 px-6 text-lg',
         className,
       )}
       {...props}

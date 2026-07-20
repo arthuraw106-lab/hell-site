@@ -9,23 +9,16 @@ export function ProButton({ className, variant = 'primary', children, ...props }
   return (
     <button
       className={cn(
-        'group relative inline-flex h-12 items-center justify-center overflow-hidden rounded-2xl px-6 font-black transition duration-300 disabled:pointer-events-none disabled:opacity-60',
-        variant === 'primary' &&
-          'bg-gradient-to-l from-hell-red to-hell-violet text-white shadow-glow hover:scale-[1.02] active:scale-[.98]',
-        variant === 'secondary' &&
-          'border border-white/10 bg-white/10 text-white hover:bg-white/15 hover:shadow-soft',
-        variant === 'ghost' &&
-          'text-white/70 hover:bg-white/10 hover:text-white',
-        variant === 'danger' &&
-          'bg-red-600 text-white hover:bg-red-500',
+        'inline-flex h-10 items-center justify-center gap-2 rounded-lg px-4 font-bold transition-colors disabled:opacity-50 disabled:pointer-events-none',
+        variant === 'primary' && 'bg-hell-violet text-white hover:bg-hell-violet2',
+        variant === 'secondary' && 'border border-hell-border bg-hell-card text-white hover:bg-hell-purple',
+        variant === 'ghost' && 'text-hell-muted hover:text-white',
+        variant === 'danger' && 'bg-red-600 text-white hover:bg-red-500',
         className,
       )}
       {...props}
     >
-      {variant === 'primary' ? (
-        <span className="absolute inset-0 translate-x-full bg-gradient-to-l from-white/0 via-white/25 to-white/0 transition duration-700 group-hover:-translate-x-full" />
-      ) : null}
-      <span className="relative z-10 flex items-center gap-2">{children}</span>
+      {children}
     </button>
   );
 }
