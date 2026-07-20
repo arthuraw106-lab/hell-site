@@ -197,7 +197,7 @@ export type ChatRoom = {
 
 export type ChatMessage = {
   id: string;
-  roomId;
+  roomId: string;
   userId: string;
   type: 'TEXT' | 'IMAGE' | 'AUDIO' | 'VIDEO' | 'FILE' | 'SYSTEM';
   body?: string | null;

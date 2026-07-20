@@ -281,7 +281,7 @@ export function HomePage() {
                       <h3 className="font-black">{poll.title}</h3>
                       <p className="mt-2 line-clamp-2 text-sm leading-6 text-white/45">{poll.description}</p>
                       <div className="mt-4 flex items-center justify-between">
-                        <span className="text-xs text-white/40">{poll._count.votes} رأی</span>
+                        <span className="text-xs text-white/40">{poll._count?.votes ?? 0} رأی</span>
                         <button
                           className="rounded-xl bg-hell-red px-3 py-2 text-xs font-black"
                           onClick={async () => {
