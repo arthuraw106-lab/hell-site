@@ -24,11 +24,11 @@ export function HomeMangaCard({ manga, index = 0 }: { manga: Manga; index?: numb
 
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-90" />
 
-            <div className="absolute right-3 top-3 rounded-full border border-white/10 bg-black/55 px-3 py-1 text-xs font-black text-white/80 backdrop-blur-xl">
+            <div className="absolute right-3 top-3 rounded-full border border-white/10 bg-black/75 px-3 py-1 text-xs font-black text-white/80">
               {manga.status}
             </div>
 
-            <div className="absolute bottom-3 right-3 flex items-center gap-2 rounded-full border border-white/10 bg-black/55 px-3 py-2 text-xs font-black backdrop-blur-xl">
+            <div className="absolute bottom-3 right-3 flex items-center gap-2 rounded-full border border-white/10 bg-black/75 px-3 py-2 text-xs font-black">
               <BookOpen size={14} className="text-hell-gold" />
               {manga.chapters?.[0]?.number ? `چپتر ${manga.chapters[0].number}` : 'به‌زودی'}
             </div>

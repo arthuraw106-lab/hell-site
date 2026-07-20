@@ -25,13 +25,13 @@ export function MangaCard({ manga, index = 0 }: { manga: Manga; index?: number }
 
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/25 to-transparent opacity-90" />
 
-            <div className="absolute right-3 top-3 flex items-center gap-2 rounded-full border border-white/10 bg-black/55 px-3 py-1.5 text-xs font-black text-white/80 backdrop-blur-xl">
+            <div className="absolute right-3 top-3 flex items-center gap-2 rounded-full border border-white/10 bg-black/75 px-3 py-1.5 text-xs font-black text-white/80">
               <Sparkles size={13} className="text-hell-gold" />
               {manga.status}
             </div>
 
             <div className="absolute bottom-3 right-3 left-3">
-              <div className="flex items-center justify-between gap-2 rounded-2xl border border-white/10 bg-black/55 p-3 backdrop-blur-xl">
+              <div className="flex items-center justify-between gap-2 rounded-2xl border border-white/10 bg-black/75 p-3">
                 <span className="flex items-center gap-1 text-xs font-bold text-white/70">
                   <BookOpen size={14} className="text-hell-cyan" />
                   {latestChapter ? `چپتر ${latestChapter.number}` : 'به‌زودی'}

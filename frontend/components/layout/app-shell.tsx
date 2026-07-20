@@ -85,7 +85,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       <AnimatedBackground />
 
       <div className="relative z-10 flex min-h-screen">
-        <aside className="sticky top-0 hidden h-screen w-72 shrink-0 border-l border-white/10 bg-[#070711]/82 backdrop-blur-2xl lg:flex lg:flex-col">
+        <aside className="sticky top-0 hidden h-screen w-72 shrink-0 border-l border-white/10 bg-[#070711]/92 lg:flex lg:flex-col">
           <SidebarContent pathname={pathname} user={user} navItems={visibleNavItems} onLogout={logout} />
         </aside>
 
@@ -107,7 +107,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         ) : null}
 
         <div className="flex min-w-0 flex-1 flex-col">
-          <header className="sticky top-0 z-50 border-b border-white/10 bg-[#050509]/72 backdrop-blur-2xl">
+          <header className="sticky top-0 z-50 border-b border-white/10 bg-[#050509]/88">
             <div className="flex h-20 items-center justify-between gap-4 px-4 md:px-6">
               <div className="flex min-w-0 items-center gap-3">
                 <button

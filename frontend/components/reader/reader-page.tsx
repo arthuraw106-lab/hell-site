@@ -124,7 +124,7 @@ export function ReaderPage({ chapterId }: { chapterId: string }) {
   return (
     <AppShell>
       <main className="relative z-10 bg-[#030306]">
-        <section className="sticky top-20 z-40 border-b border-white/10 bg-[#030306]/82 backdrop-blur-2xl">
+        <section className="sticky top-20 z-40 border-b border-white/10 bg-[#030306]/90">
           <div className="mx-auto flex max-w-7xl flex-col gap-4 px-5 py-4 xl:flex-row xl:items-center xl:justify-between">
             <div className="flex min-w-0 items-center gap-4">
               <Link

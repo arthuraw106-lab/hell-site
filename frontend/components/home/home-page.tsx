@@ -131,7 +131,7 @@ export function HomePage() {
                     />
                   </div>
 
-                  <div className="absolute bottom-8 left-8 right-8 rounded-[2rem] border border-white/10 bg-black/60 p-5 backdrop-blur-xl">
+                  <div className="absolute bottom-8 left-8 right-8 rounded-[2rem] border border-white/10 bg-black/75 p-5">
                     <div className="mb-3 flex items-center justify-between gap-3">
                       <div className="flex items-center gap-2 text-hell-gold">
                         <Crown size={18} />
@@ -147,13 +147,13 @@ export function HomePage() {
                 </div>
 
                 <div
-                                  className="absolute -right-8 top-20 rounded-3xl border border-white/10 bg-white/10 p-4 backdrop-blur-xl animate-floaty-icon-left"
+                                  className="absolute -right-8 top-20 rounded-3xl border border-white/10 bg-white/12 p-4 animate-floaty-icon-left"
                                 >
                                   <Flame className="text-hell-red" />
                                 </div>
 
                                 <div
-                                  className="absolute -left-10 bottom-28 rounded-3xl border border-white/10 bg-white/10 p-4 backdrop-blur-xl animate-floaty-icon-right"
+                                  className="absolute -left-10 bottom-28 rounded-3xl border border-white/10 bg-white/12 p-4 animate-floaty-icon-right"
                                 >
                                   <Zap className="text-hell-gold" />
                                 </div>
