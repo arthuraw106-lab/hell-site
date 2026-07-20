@@ -104,6 +104,15 @@ option { background: #0b0b18; color: white; }
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* Grid pattern for hero section (static, no animation) */
+.hero-grid {
+  background-image:
+    linear-gradient(rgba(168, 139, 250, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(168, 139, 250, 0.045) 1px, transparent 1px);
+  background-size: 54px 54px;
+  mask-image: radial-gradient(circle at center, black, transparent 75%);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: .01ms !important;

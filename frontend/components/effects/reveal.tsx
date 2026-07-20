@@ -1,6 +1,20 @@
 import { ReactNode } from 'react';
 
-// Simplified Reveal — no animation delay, just simple fade-in.
-export function Reveal({ children, className }: { children: ReactNode; delay?: number; className?: string }) {
- return <div className={`animate-reveal ${className || ''}`}>{children}</div>;
+export function Reveal({
+  children,
+  delay = 0,
+  className,
+}: {
+  children: ReactNode;
+  delay?: number;
+  className?: string;
+}) {
+  return (
+    <div
+      className={`animate-reveal ${className || ''}`}
+      style={{ animationDelay: `${0.1 + delay}s` }}
+    >
+      {children}
+    </div>
+  );
 }
