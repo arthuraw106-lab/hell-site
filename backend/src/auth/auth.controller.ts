@@ -52,7 +52,10 @@ export class AuthController {
   @Public()
   @Get('google')
   @UseGuards(AuthGuard('google'))
-  google() {
+  google(@Req() request: any) {
+    // Pass next param to state so callback can use it
+    const next = request.query?.next || '/';
+    request.res?.cookie?.('google_next', next, { maxAge: 60000, httpOnly: false });
     return { ok: true };
   }
 
